@@ -1,0 +1,33 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Tạo máy ảo từ box centos/7, gán địa chỉ IP, đặt hostname, gán 2GB bộ nhớ, 2 cpus  
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+  config.vm.network "private_network", ip: "172.16.10.100"
+  config.vm.hostname = "master.xtl"
+
+  config.vm.provider "virtualbox" do |vb|
+     vb.name = "master.xtl"
+     vb.cpus = 2
+     vb.memory = "2048"
+  end
+  
+  # Chạy file install-docker-kube.sh sau khi nạp Box
+  config.vm.provision "shell", path: "./../install-docker-kube.sh"
+
+  # Chạy các lệnh shell
+  config.vm.provision "shell", inline: <<-SHELL
+    # Đặt pass 123 có tài khoản root và cho phép SSH
+    echo "123" | passwd --stdin root
+    sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+    systemctl reload sshd
+# Ghi nội dung sau ra file /etc/hosts để truy cập được các máy theo HOSTNAME
+cat >>/etc/hosts<<EOF
+172.16.10.100 master.xtl
+172.16.10.101 worker1.xtl
+172.16.10.102 worker2.xtl
+EOF
+
+  SHELL
+end
