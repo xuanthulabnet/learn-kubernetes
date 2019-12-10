@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rsapp
+  labels:
+    app: rsapp
+spec:
+  containers:
+  - name: app
+    image: ichte/swarmtest:node
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "100m"
+    ports:
+      - containerPort: 8085

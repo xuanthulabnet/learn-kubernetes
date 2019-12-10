@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: rsapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rsapp
+  template:
+    metadata:
+      name: rsapp
+      labels:
+        app: rsapp
+    spec:
+      containers:
+      - name: app
+        image: ichte/swarmtest:node
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        ports:
+          - containerPort: 8085
+
