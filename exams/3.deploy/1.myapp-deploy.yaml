@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployapp
+spec:
+  
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: deployapp
+
+  template:
+    metadata:
+      labels:
+        app: deployapp
+    spec:
+      containers:
+      - name: node
+        image: nginx
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "150m"
+        ports:
+        - containerPort: 8085
