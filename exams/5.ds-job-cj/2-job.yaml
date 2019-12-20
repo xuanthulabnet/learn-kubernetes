@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: myjob
+spec:
+  # Số lần chạy POD thành công
+  completions: 10
+  # Số lần tạo chạy lại POD bị lỗi, trước khi đánh dấu job thất bại
+  backoffLimit: 3
+  # Số POD chạy song song
+  parallelism: 2
+  # Số giây tối đa của JOB, quá thời hạn trên hệ thống ngắt JOB
+  activeDeadlineSeconds: 120
+
+  template:
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command:
+          - /bin/shabc
+          - -c
+          - date; echo "Job executed"
+      restartPolicy: Never

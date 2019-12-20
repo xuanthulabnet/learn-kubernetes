@@ -1,0 +1,24 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: mycronjob
+spec:
+
+  # Một phút chạy một Job
+  schedule: "*/1 * * * *"
+
+  # Số Job lưu lại
+  successfulJobsHistoryLimit: 3
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: busybox
+            image: busybox
+            args:
+            - /bin/sh
+            - -c
+            - date; echo "Job in CronJob"
+          restartPolicy: Never

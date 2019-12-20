@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+        - name: cert-volume
+          secret:
+              secretName: "secret-nginx-cert"
+      containers:
+      - name: n1
+        image: ichte/swarmtest:nginx
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+          - name: cert-volume
+            mountPath: "/certs/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+spec:
+  type: NodePort
+  ports:
+  - port: 8080        # cổng dịch vụ ánh xạ vào cổng POD
+    targetPort: 80    # cổng POD ánh xạ vào container
+    protocol: TCP
+    name: http
+    nodePort: 31080   # cổng NODE ánh xạ vào cổng dịch vụ (chỉ chọn 30000-32767)
+
+  - port: 443
+    targetPort: 443
+    protocol: TCP
+    name: https
+    nodePort: 31443
+  # Chú ý đúng với Label của POD tại Deployment
+  selector:
+    app: nginx     
