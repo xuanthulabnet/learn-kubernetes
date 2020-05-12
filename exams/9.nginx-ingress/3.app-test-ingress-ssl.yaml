@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: app
+  namespace: nginx-ingress
+spec:
+  tls:
+    - hosts:
+      - xuanthulab.test
+      secretName: default-server-secret
+
+    # - hosts:
+    #   - otherdomain.coms
+    #   secretName: otherssl-ssl
+  rules:
+  - host: xuanthulab.test
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: http-test-svc
+          servicePort: 80

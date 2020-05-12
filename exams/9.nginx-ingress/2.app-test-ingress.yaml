@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: app
+  namespace: nginx-ingress
+spec:
+  rules:
+    # Tên miền truy cập
+  - host: xuanthulab.test
+    http:
+      paths:
+      - path: /
+        backend:
+          # dịch vụ phục vụ tương ứng với tên miền và path
+          serviceName: http-test-svc
+          servicePort: 80
